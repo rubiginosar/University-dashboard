@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+	<!-- Boxicons -->
+	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+	<!-- My CSS -->
+	<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}"/>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <style>
+        /* CSS to hide tables */
+        #personsTable {
+            display: block;
+        }
+        #searchResultsTable {
+            display: none;
+        }
+    </style>
+
+	<title>AdminHub</title>
+</head>
+<body>
+
+
+	<!-- SIDEBAR -->
+	<section id="sidebar">
+		<a href="#" class="brand">
+			<i class="fa-solid fa-graduation-cap"></i>
+			<span class="text">PRAVAN</span>
+		</a>
+		<ul class="side-menu top">
+			<li>
+				<a href="#" onclick="redirectToDashboard()">
+					<i class='bx bxs-dashboard' ></i>
+					<span class="text">Dashboard</span>
+				</a>
+			</li>
+
+			<li>
+				<a href="#" onclick="redirectToDetails()">
+					<i class='bx bxs-doughnut-chart'></i>
+					<span class="text">Details</span>
+				</a>
+			</li>		
+			<li class="active">
+				<a href="#" onclick="redirectToEdit()">
+					<i class='bx bx-edit-alt' ></i>
+					<span class="text">Edit</span>
+				</a>
+			</li>
+		</ul>
+		<!-- <ul class="side-menu">
+			<li>
+				<a href="#">
+					<i class='bx bxs-cog' ></i>
+					<span class="text">Settings</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="logout">
+					<i class='bx bxs-log-out-circle' ></i>
+					<span class="text">Logout</span>
+				</a>
+			</li>
+		</ul> -->
+	</section>
+	<!-- SIDEBAR -->
+
+
+
+	<!-- CONTENT -->
+	<section id="content">
+		<!-- NAVBAR -->
+		<nav>
+			<i class='bx bx-menu' ></i>
+			<a href="#" class="nav-link">Search</a>
+			<form id="searchForm">
+				<div class="form-input">
+					<input type="search" id="searchTerm" name="searchTerm" placeholder="Search...">
+					<button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
+				</div>
+			</form>
+			<input type="checkbox" id="switch-mode" hidden>
+			<label for="switch-mode" class="switch-mode"></label>
+			<button onclick="loadData()" class="btn-refresh" >
+				<i class="fa-solid fa-arrows-rotate"></i>
+				<span class="text">Refresh</span>
+			</button>
+		</nav>
+
+        <main>
+			<div class="head-title">
+				<div class="left">
+					<h1>Edit</h1>
+					<ul class="breadcrumb">
+						<li>
+							<a href="#">Edit</a>
+						</li>
+						<li><i class='bx bx-chevron-right' ></i></li>
+						<li>
+							<a class="active" onclick="redirectToDashboard()">Home</a>
+						</li>
+					</ul>
+				</div>
+				<a href="#" class="btn-download" onclick="fetchPersons()">
+					<i class='bx bxs-cloud-download' ></i>
+					<span class="text">Fetch</span>
+				</a>
+            </div> 
+                
+
+    <div class="table-data">
+        <div class="order">
+    <!-- Add a person -->
+    <form id="addForm">
+        <!-- Form inputs for adding a person -->
+        <div>
+        <label for="valAnnee">Year:</label>
+        <input type="number" id="valAnnee" name="valAnnee" required><br>
+    
+        <label for="valMatricule">Matricule:</label>
+        <input type="number" id="valMatricule" name="valMatricule" required><br>
+        </div>
+        <div>
+        <label for="valNom">family Name:</label>
+        <input type="text" id="valNom" name="valNom" maxlength="50" required><br>
+    
+        <label for="valPrenom">Name:</label>
+        <input type="text" id="valPrenom" name="valPrenom" maxlength="50" required><br>
+    </div>
+    <div class="radio-group">
+        <label for="valSexeM">Male</label>
+        <input type="radio" id="valSexeM" name="valSexe" value="H" required>
+        
+        <label for="valSexeF">Female</label>
+        <input type="radio" id="valSexeF" name="valSexe" value="F" required>
+      </div>
+      
+    <div>
+        <label for="valSpecialite">Speciality:</label>
+        <input type="text" id="valSpecialite" name="valSpecialite" maxlength="20" required><br>
+    
+        <label for="valPoints">Score:</label>
+        <input type="number" id="valPoints" name="valPoints" step="0.01" required><br>
+    </div>
+        <button id="btn_add" type="submit">Add Person</button>
+    </form>
+
+    <!-- Update a person -->
+
+	<form id="updateForm" style="display: none;">
+        <div>
+		<label for="valAnneeUpdate">Year:</label>
+		<input type="number" id="valAnneeUpdate" name="valAnnee" required><br>
+	
+		<label for="valMatriculeUpdate">Matricule:</label>
+		<input type="number" id="valMatriculeUpdate" name="valMatricule" required><br>
+    	</div>
+        <div>
+		<label for="valNomUpdate">Family name:</label>
+		<input type="text" id="valNomUpdate" name="valNom" maxlength="50" required><br>
+	
+		<label for="valPrenomUpdate">Name:</label>
+		<input type="text" id="valPrenomUpdate" name="valPrenom" maxlength="50" required><br>
+	    </div>
+        <div class="radio-group">
+        <label for="valSexeMUpdate">Male</label>
+        <input type="radio" id="valSexeMUpdate" name="valSexe" value="H" required>
+        
+        <label for="valSexeFUpdate">Female</label>
+        <input type="radio" id="valSexeFUpdate" name="valSexe" value="F" required>
+<br>
+        </div>
+        <div>
+		<label for="valSpecialiteUpdate">Speciality:</label>
+		<input type="text" id="valSpecialiteUpdate" name="valSpecialite" maxlength="20" required><br>
+	
+		<label for="valPointsUpdate">Score:</label>
+		<input type="number" id="valPointsUpdate" name="valPoints" step="0.01" required><br>
+		<button type="submit" id="updateButton">Update Person</button>
+		<button type="button" id="cancelEditButton">Cancel</button>
+    </div>
+	</form>
+<!-- </div>
+</div> -->
+
+    <div id="output">
+    <!-- fetched persons -->
+    <table id="personsTable">
+        <thead>
+            <!-- <tr>
+                <th>Année</th>
+                <th>Matricule</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Sexe</th>
+                <th>Spécialité</th>
+                <th>Moyenne</th>
+                <th>Delete</th>
+                <th>Edit</th>
+            </tr> -->
+        </thead>
+        <tbody id="personsTableBody"></tbody>
+    </table>
+
+ <!-- search results -->
+<table id="searchResultsTable">
+    <thead>
+        <!-- <tr>
+            <th>Année</th>
+            <th>Matricule</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Sexe</th>
+            <th>Spécialité</th>
+            <th>Moyenne</th>
+        </tr> -->
+    </thead>
+    <tbody id="searchResultsBody"></tbody>
+    </table>
+        <!-- Display Search Results -->
+    <div id="searchResults"></div>
+</div>
+</div>
+</div>
+    <script>
+    function redirectToDetails() {
+        window.location.href = "/details";
+    }
+
+    function redirectToDashboard() {
+        window.location.href = "/";
+    }
+
+	function redirectToEdit() {
+		window.location.href = "/edit";
+	}
+        // Function to fetch and display fetched persons
+        function fetchPersons() {
+            fetch('/api/persons', {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('personsTableBody');
+                tableBody.innerHTML = ''; // Clear previous table rows
+                data.forEach((person, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td id="annee">${person.annee}</td>
+                        <td id="matricule">${person.matricule}</td>
+                        <td id="nom">${person.nom}</td>
+                        <td id="prenom">${person.prenom}</td>
+                        <td id="sexe">${person.sexe}</td>
+                        <td id="specialite">${person.specialite}</td>
+                        <td id="moyenne">${person.moyenne}</td>
+                        <td><button id="btn_delete" onclick="deletePerson('${person.annee}', '${person.matricule}')">Delete</button></td>
+                        <td><button id="btn_edit" onclick="editRow('${person.annee}', '${person.matricule}')">Edit</button></td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        
+        function addPerson(formData) {
+    fetch('/api/persons', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('output').innerText = JSON.stringify(data);
+        fetchPersons(); // Update the table after adding a person
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+document.getElementById('addForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    addPerson(formData);
+    // Move fetchPersons inside the success block to ensure it's called after adding a person
+    // and receiving a successful response
+    const searchTerm = document.getElementById('searchTerm').value.trim();
+        if (searchTerm !== '') {
+            searchPersons(searchTerm); // Update search results after adding a person
+        } 
+            fetchPersons(); // Update the table after adding a person
+  
+    this.reset(); // Reset the form after adding a person
+});
+
+
+
+    function deletePerson(annee, matricule) {
+    fetch(`/api/persons/${annee}/${matricule}`, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (response.status === 204) {
+            // Check if the search input field is not empty
+            const searchTerm = document.getElementById('searchTerm').value;
+            if (searchTerm.trim() !== '') {
+                searchPersons(searchTerm); // Refresh search results after deletion
+            } else {
+                fetchPersons(); // If search input is empty, fetch all persons
+            }
+        } else {
+            return response.json();
+        }
+    })
+    .then(data => {
+        if (data && data.error) {
+            console.error(`Error: ${data.error}`);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+        let originalAnnee = ''; 
+        let originalMatricule = '';
+
+        function editRow(annee, matricule) {
+            const updateForm = document.getElementById('updateForm');
+            const cancelEditButton = document.getElementById('cancelEditButton');
+
+            const tableRows = document.getElementById('personsTableBody').querySelectorAll('tr');
+            for (const row of tableRows) {
+                const rowData = row.querySelectorAll('td');
+                const rowAnnee = rowData[0].innerText;
+                const rowMatricule = rowData[1].innerText;
+                if (rowAnnee === annee && rowMatricule === matricule) {
+                    // Store the original values
+                    originalAnnee = rowAnnee;
+                    originalMatricule = rowMatricule;
+
+                    document.getElementById('valAnneeUpdate').value = rowData[0].innerText;
+                    document.getElementById('valMatriculeUpdate').value = rowData[1].innerText;
+                    document.getElementById('valNomUpdate').value = rowData[2].innerText;
+                    document.getElementById('valPrenomUpdate').value = rowData[3].innerText;
+
+                    const gender = rowData[4].innerText.toUpperCase();
+                    if (gender === 'H') {
+                        document.getElementById('valSexeMUpdate').checked = true;
+                    } else if (gender === 'F') {
+                        document.getElementById('valSexeFUpdate').checked = true;
+                    }
+                    
+                    document.getElementById('valSpecialiteUpdate').value = rowData[5].innerText;
+                    document.getElementById('valPointsUpdate').value = rowData[6].innerText;
+
+                    // Show the update form, hide the add form
+                    updateForm.style.display = 'block';
+                    document.getElementById('addForm').style.display = 'none';
+                    break;
+                }
+            }
+        }
+// Update Person - Submit updated data to backend
+document.getElementById('updateForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Use original values for the URL
+    const url = `/api/persons/${originalAnnee}/${originalMatricule}`;
+
+    const formData = new FormData(this);
+
+    fetch(url, {
+        method: 'PUT',
+        body: formData
+    })
+    .then(response => {
+        if (response.status === 200) {
+            
+            // Update the table after successful update
+            fetchPersons(); // Fetch the updated data and refresh the display
+            this.reset(); // Reset the form after updating a person
+            const searchTerm = document.getElementById('searchTerm').value;
+            searchPersons(searchTerm); // Refresh the search results based on the updated data
+        } else {
+            return response.json();
+        }
+    })
+    .then(data => {
+        if (data && data.error) {
+            console.error(`Error: ${data.error}`);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+
+        // Cancel Edit - Returns to Add Person form
+        document.getElementById('cancelEditButton').addEventListener('click', function() {
+            document.getElementById('addForm').style.display = 'block';
+            document.getElementById('updateForm').style.display = 'none';
+        });
+
+        
+		function searchPersons(searchTerm) {
+        fetch(`/api/persons/search?term=${searchTerm}`, {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            const personsTable = document.getElementById('personsTable');
+            const searchResultsTable = document.getElementById('searchResultsTable');
+            const searchResultsBody = document.getElementById('searchResultsBody');
+            searchResultsBody.innerHTML = ''; // Clear previous search results
+            if (data.length === 0) {
+                searchResultsBody.innerHTML = '<tr><td colspan="7">No results found.</td></tr>';
+            } else {
+                data.forEach(person => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${person.annee}</td>
+                        <td>${person.matricule}</td>
+                        <td>${person.nom}</td>
+                        <td>${person.prenom}</td>
+                        <td>${person.sexe}</td>
+                        <td>${person.specialite}</td>
+                        <td>${person.moyenne}</td>
+                        <td><button id="btn_delete" onclick="deletePerson('${person.annee}', '${person.matricule}')">Delete</button></td>
+                        <td><button id="btn_edit" onclick="editRow('${person.annee}', '${person.matricule}')">Edit</button></td>
+                    `;
+                    searchResultsBody.appendChild(row);
+                });
+            }
+            
+            
+            personsTable.style.display = 'none';
+            searchResultsTable.style.display = 'block';
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Add event listener to the search input for real-time search
+    document.getElementById('searchTerm').addEventListener('input', function(e) {
+        const searchTerm = e.target.value;
+        searchPersons(searchTerm);
+    });
+
+    // Add event listener for the search form
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const searchTerm = document.getElementById('searchTerm').value;
+        searchPersons(searchTerm);
+    });
+    
+
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+	<!-- Boxicons -->
+	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+	<!-- My CSS -->
+	<link rel="stylesheet" href="{{url_for('static', filename='style1.css')}}"/>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+	<title>AdminHub</title>
+</head>
+<body>
+
+
+	<!-- SIDEBAR -->
+	<section id="sidebar">
+		<a href="#" class="brand">
+			<i class="fa-solid fa-graduation-cap"></i>
+			<span class="text">PRAVAN</span>
+		</a>
+		<ul class="side-menu top">
+			<li >
+				<a href="#" onclick="redirectToDashboard()">
+					<i class='bx bxs-dashboard' ></i>
+					<span class="text">Dashboard</span>
+				</a>
+			</li>
+			<li class="active">
+				<a href="#" onclick="redirectToDetails()">
+					<i class='bx bxs-doughnut-chart'></i>
+					<span class="text">Details</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" onclick="redirectToEdit()">
+					<i class='bx bx-edit-alt'></i>
+					<span class="text">Edit</span>
+				</a>
+			</li>
+		</ul>
+		<!-- <ul class="side-menu">
+			<li>
+				<a href="#">
+					<i class='bx bxs-cog' ></i>
+					<span class="text">Settings</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="logout">
+					<i class='bx bxs-log-out-circle' ></i>
+					<span class="text">Logout</span>
+				</a>
+			</li>
+		</ul> -->
+	</section>
+	<!-- SIDEBAR -->
+
+
+
+	<!-- CONTENT -->
+	<section id="content">
+		<!-- NAVBAR -->
+		<nav>
+			<i class='bx bx-menu' ></i>
+			<!-- <a href="#" class="nav-link">Categories</a> -->
+			<input type="checkbox" id="switch-mode" hidden>
+			<label for="switch-mode" class="switch-mode"></label>
+			<button onclick="loadData()" class="btn-refresh">
+				<i class="fa-solid fa-arrows-rotate"></i>
+				<span class="text">Refresh</span>
+			</button>
+		</nav>
+	
+		<!-- NAVBAR -->
+
+		 <!-- MAIN -->
+		<main>
+			<div class="head-title">
+				<div class="left">
+					<h1>Details</h1>
+					<ul class="breadcrumb">
+						<li>
+							<a href="#">Details</a>
+						</li>
+						<li><i class='bx bx-chevron-right' ></i></li>
+						<li>
+							<a class="active" onclick="redirectToDashboard()">Home</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<ul class="box-info">
+				<li>
+					<i class="fa-solid fa-percent bx"></i>
+					<span class="text">
+						<h3 id="averagePercentage"></h3>
+						<p>Success percentage</p>
+					</span>
+				</li>
+				<li>
+					<i class='bx bxs-calculator'></i>
+					<span class="text">
+						<h3 id="averageMoyenne"></h3>
+						<p>Average</p>
+					</span>
+				</li>
+			</ul>
+			<div class="table-data">
+				<div class="todo">
+					<div class="head">
+						<h3>Succes Per sex</h3>
+					</div>
+					<div style="height: 300px; width: 375px;  display:inline; float:left">
+						<div style="height: 100%; width: 100%; ">
+							<canvas id="gender-pie-chart"></canvas>
+						</div>			
+					</div>
+				</div>
+				<div class="todo">
+					<div class="head">
+						<h3>Success Per speciality</h3>
+					</div>
+					<div style="height: 300px; width: 375px;  display:inline; float:left">
+						<div style="height: 100%; width: 100%; ">
+							<canvas id="success-per-specialty-line-chart"></canvas>
+						</div>			
+					</div>
+				</div>
+				
+				<div class="todo">
+					<div class="head">
+						<h3>Success percentage Per year</h3>
+					</div>
+					<div style="height: 300px; width: 375px;  display:inline; float:left">
+						<div style="height: 100%; width: 100%; ">
+							<canvas id="success-by-year-chart"></canvas>
+						</div>			
+					</div>
+				</div>
+				<div class="todo">
+					<div class="head">
+						<h3>Average per speciality</h3>
+					</div>
+					<div style="height: 300px; width: 375px;  display:inline; float:left">
+						<div style="height: 100%; width: 100%; ">
+							<canvas id="lineChartSpecialty2"></canvas>
+						</div>			
+					</div>
+				</div>
+				<div class="todo">
+					<div class="head">
+						<h3>Average per sex</h3>
+					</div>
+					<div style="height: 300px; width: 375px;  display:inline; float:left">
+						<div style="height: 100%; width: 100%; ">
+							<canvas id="average"></canvas>
+						</div>			
+					</div>
+				</div>
+
+				
+				<div class="todo">
+					<div class="head">
+						<h3>Average per Year</h3>
+					</div>
+					<div style="height: 300px; width: 375px;  display:inline; float:left">
+						<div style="height: 100%; width: 100%; ">
+							<canvas id="averageByYearSpecialtyChart"></canvas>
+						</div>			
+					</div>
+				</div>
+				<div class="todo">
+					<div class="head">
+						<h3>Scores repartition</h3>
+					</div>
+					<div style="height: 300px; width: 700px; display: block; margin: 0 auto;">
+						<div style="height: 100%; width: 100%; ">
+							<canvas id="scatterChart"></canvas>
+						</div>			
+					</div>
+				</div>
+		</main>
+</body>
+</html>
+
+<script>
+    function redirectToDetails() {
+        window.location.href = "/details";
+    }
+
+    function redirectToDashboard() {
+        window.location.href = "/";
+    }
+
+	function redirectToEdit() {
+		window.location.href = "/edit";
+	}
+function loadTotals() {
+    fetch('/total_counts')
+        .then(response => response.json())
+        .then(data => {
+            const averageMoyenneElement = document.getElementById('averageMoyenne');
+            averageMoyenneElement.textContent = data.average_moyenne;
+
+            const averagePercentageElement = document.getElementById('averagePercentage');
+            averagePercentageElement.textContent = data.percentage_success +"%"; // Update this line
+        })
+        .catch(error => {
+            console.error('Error fetching totals:', error);
+        });
+}
+
+// Call the function when the page loads
+window.onload = loadTotals;
+
+	
+</script>

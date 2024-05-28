@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+	<!-- Boxicons -->
+	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+	<!-- My CSS -->
+	<link rel="stylesheet" href="{{url_for('static', filename='style1.css')}}"/>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+	<title>AdminHub</title>
+</head>
+<body>
+
+
+	<!-- SIDEBAR -->
+	<section id="sidebar">
+		<a href="#" class="brand">
+			<i class="fa-solid fa-graduation-cap"></i>
+			<span class="text">PRAVAN</span>
+		</a>
+		<ul class="side-menu top">
+			<li class="active">
+				<a href="#" onclick="redirectToDashboard()">
+					<i class='bx bxs-dashboard' ></i>
+					<span class="text">Dashboard</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" onclick="redirectToDetails()">
+					<i class='bx bxs-doughnut-chart'></i>
+					<span class="text">Details</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" onclick="redirectToEdit()">
+					<i class='bx bx-edit-alt'></i>
+					<span class="text">Edit</span>
+				</a>
+			</li>
+		</ul>
+		<!-- <ul class="side-menu">
+			<li>
+				<a href="#">
+					<i class='bx bxs-cog' ></i>
+					<span class="text">Settings</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="logout">
+					<i class='bx bxs-log-out-circle' ></i>
+					<span class="text">Logout</span>
+				</a>
+			</li>
+		</ul> -->
+	</section>
+	<!-- SIDEBAR -->
+
+
+
+	<!-- CONTENT -->
+	<section id="content">
+		<!-- NAVBAR -->
+		<nav>
+			<i class='bx bx-menu' ></i>
+			<input type="checkbox" id="switch-mode" hidden>
+			<label for="switch-mode" class="switch-mode"></label>
+			<button onclick="loadData()" class="btn-refresh" >
+				<i class="fa-solid fa-arrows-rotate"></i>
+				<span class="text">Refresh</span>
+			</button>
+		</nav>
+		<!-- NAVBAR -->
+
+		 <!-- MAIN -->
+		<main>
+			<div class="head-title">
+				<div class="left">
+					<h1>Dashboard</h1>
+					<ul class="breadcrumb">
+						<li>
+							<a href="#">Dashboard</a>
+						</li>
+						<li><i class='bx bx-chevron-right' ></i></li>
+						<li>
+							<a class="active" onclick="redirectToDashboard()">Home</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<ul class="box-info">
+				<li>
+					<i class='bx bxs-calendar-check' ></i>
+					<span class="text">
+						<h3 id="totalYearsCount"></h3>
+						<p>Total Years</p>
+					</span>
+				</li>
+				<li>
+					<i class='bx bxs-group' ></i>
+					<span class="text">
+						<h3 id="totalStudentsCount"></h3>
+						<p>Total Students</p>
+					</span>
+				</li>
+				<li>
+					<i class='bx bx-book-reader'></i>
+					<span class="text">
+						<h3 id="totalSpecialtiesCount"></h3>
+						<p>Total Majors</p>
+					</span>
+				</li>
+			</ul>
+
+			<div class="table-data">
+				<div class="todo">
+					<div class="head">
+						<h3>Per Year</h3>
+					</div>
+					<div style="height: 300px; width: 375px;  display:inline; float:left">
+						<div style="height: 100%; width: 100%; ">
+							<canvas id="students-by-year-chart"></canvas>
+						</div>			
+					</div>
+				</div>
+				<div class="todo">
+					<div class="head">
+						<h3>Per Gender</h3>
+					</div>
+					<div style="height: 300px; width: 375px;  display:inline; float:left">
+						<div style="height: 100%; width: 100%;">
+							<canvas id="students-by-gender-chart" width="400" height="400"></canvas>
+						</div>			
+					</div>
+				</div>
+			</div>
+			<div class="table-data">
+				<div class="order">
+					<div class="head">
+						<h3>Per Major</h3>
+					</div>
+					<div style="height: 300px; width: 100%; display:inline; float:left">
+						<div style="height: 100%; width: 100%; ">
+							<canvas id="students-by-specialty-chart" width="1200" height="400"></canvas>
+						</div>			
+					</div>
+				</div>
+			</div>
+							
+
+		</main>
+
+	
+
+</body>
+</html>
+
+<script>
+        function redirectToDetails() {
+        window.location.href = "/details";
+    }
+
+    function redirectToDashboard() {
+        window.location.href = "/";
+    }
+
+	function redirectToEdit() {
+		window.location.href = "/edit";
+	}
+
+
+</script>
